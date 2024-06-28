@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="823.2,1814.4" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:ue="clr-namespace:UiPath.Excel;assembly=UiPath.Excel.Activities" xmlns:ueab="clr-namespace:UiPath.Excel.Activities.Business;assembly=UiPath.Excel.Activities" xmlns:uga="clr-namespace:UiPath.GSuite.Activities;assembly=UiPath.GSuite.Activities" xmlns:ugage="clr-namespace:UiPath.GSuite.Activities.Gmail.Enums;assembly=UiPath.GSuite.Activities" xmlns:upr="clr-namespace:UiPath.Platform.ResourceHandling;assembly=UiPath.Platform" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.GSuite.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="869.6,2229.6" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:ue="clr-namespace:UiPath.Excel;assembly=UiPath.Excel.Activities" xmlns:ueab="clr-namespace:UiPath.Excel.Activities.Business;assembly=UiPath.Excel.Activities" xmlns:uga="clr-namespace:UiPath.GSuite.Activities;assembly=UiPath.GSuite.Activities" xmlns:ugas="clr-namespace:UiPath.GSuite.Activities.Sheets;assembly=UiPath.GSuite.Activities" xmlns:um="clr-namespace:UiPath.Mail;assembly=UiPath.Mail.Activities" xmlns:umab="clr-namespace:UiPath.Mail.Activities.Business;assembly=UiPath.Mail.Activities" xmlns:umabh="clr-namespace:UiPath.Mail.Activities.Business.HtmlEditor;assembly=UiPath.Mail.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <scg:List x:TypeArguments="x:String" Capacity="96">
       <x:String>System.Activities</x:String>
@@ -52,6 +52,11 @@
       <x:String>UiPath.Platform.ResourceHandling</x:String>
       <x:String>UiPath.GSuite.Activities</x:String>
       <x:String>UiPath.Platform</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+      <x:String>UiPath.GSuite.Activities.Sheets</x:String>
+      <x:String>UiPath.GSuite.Activities.Sheets.Enums</x:String>
+      <x:String>UiPath.GSuite.Enums</x:String>
     </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -122,6 +127,7 @@
       <AssemblyReference>UiPath.GSuite.Activities</AssemblyReference>
       <AssemblyReference>UiPath.Workflow</AssemblyReference>
       <AssemblyReference>UiPath.CodedWorkflows</AssemblyReference>
+      <AssemblyReference>UiPath.GSuite</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
   <sap:WorkflowViewStateService.ViewState>
@@ -130,89 +136,132 @@
       <x:Boolean x:Key="ShouldExpandAll">True</x:Boolean>
     </scg:Dictionary>
   </sap:WorkflowViewStateService.ViewState>
-  <ueab:SequenceX DisplayName="Single Excel Process Scope" sap:VirtualizedContainerService.HintSize="640,1749.6" sap2010:WorkflowViewState.IdRef="SequenceX_1">
+  <ueab:SequenceX DisplayName="Single Excel Process Scope" sap:VirtualizedContainerService.HintSize="880,2164.8" sap2010:WorkflowViewState.IdRef="SequenceX_1">
     <ueab:SequenceX.Variables>
       <Variable x:TypeArguments="ue:IWorkbookQuickHandle" Default="[new WorkbookQuickHandle(workbookPath:=&quot;Project_Notebook.xlsx&quot;,visible:=True,autoSave:=False,createNew:=True,readOnly:=False,isWorkspace:=True)]" Name="Notes" />
       <Variable x:TypeArguments="x:Object" Name="currentName" />
       <Variable x:TypeArguments="x:Object" Name="currentEmail" />
       <Variable x:TypeArguments="x:Object" Name="currentMessage" />
       <Variable x:TypeArguments="x:Object" Name="currentAttachment" />
+      <Variable x:TypeArguments="x:String" Name="localFilePath">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:String x:Key="SourceIdRef">DownloadSpreadsheet_1</x:String>
+            <x:String x:Key="SourcePropertyName">LocalFilepath</x:String>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </Variable>
     </ueab:SequenceX.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ueab:ExcelApplicationCard Password="{x:Null}" ReadFormatting="{x:Null}" DisplayName="Use Excel File" sap:VirtualizedContainerService.HintSize="596.8,1683.2" sap2010:WorkflowViewState.IdRef="ExcelApplicationCard_1" ResizeWindow="None" WorkbookPath="D:\Program Files\UIPath\Project1.xlsx">
-      <ueab:ExcelApplicationCard.Body>
-        <ActivityAction x:TypeArguments="ue:IWorkbookQuickHandle">
+    <ugas:GoogleSheetsApplicationScope ConnectionAccountName="{x:Null}" ConnectionId="{x:Null}" ContinueOnError="{x:Null}" FileId="{x:Null}" Filename="{x:Null}" ParentFolderId="{x:Null}" ParentFolderPath="{x:Null}" SpreadsheetName="{x:Null}" Timeout="{x:Null}" Account="lew20021014@gmail.com" Action="UseExisting" Connector="uipath-google-sheets" DisplayName="Use Google Spreadsheet" sap:VirtualizedContainerService.HintSize="817.6,2076" sap2010:WorkflowViewState.IdRef="GoogleSheetsApplicationScope_1" Mode="EnterId" SpreadsheetId="1jE6q0F_M_puaLBi9OBHXm_GwSpP_Xai1EYrUp__pv90" UseConnectionService="False" UserEmail="lew20021014@gmail.com">
+      <ugas:GoogleSheetsApplicationScope.Body>
+        <ActivityAction x:TypeArguments="ugas:IGoogleSheetTarget">
           <ActivityAction.Argument>
-            <DelegateInArgument x:TypeArguments="ue:IWorkbookQuickHandle" Name="Excel" />
+            <DelegateInArgument x:TypeArguments="ugas:IGoogleSheetTarget" Name="GSpreadsheet" />
           </ActivityAction.Argument>
-          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="563.2,1390.4" sap2010:WorkflowViewState.IdRef="Sequence_3">
+          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="784,1769.6" sap2010:WorkflowViewState.IdRef="Sequence_5">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <ueab:ExcelForEachRowX DisplayName="For Each Excel Row" EmptyRowBehavior="Stop" HasHeaders="True" sap:VirtualizedContainerService.HintSize="520,1324" sap2010:WorkflowViewState.IdRef="ExcelForEachRowX_1" Range="[Excel.Sheet(&quot;Sheet1&quot;)]" SaveAfterEachRow="False">
-              <ueab:ExcelForEachRowX.Body>
-                <ActivityAction x:TypeArguments="ue:CurrentRowQuickHandle, x:Int32">
-                  <ActivityAction.Argument1>
-                    <DelegateInArgument x:TypeArguments="ue:CurrentRowQuickHandle" Name="CurrentRow" />
-                  </ActivityAction.Argument1>
-                  <ActivityAction.Argument2>
-                    <DelegateInArgument x:TypeArguments="x:Int32" Name="CurrentIndex" />
-                  </ActivityAction.Argument2>
-                  <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="486.4,1108" sap2010:WorkflowViewState.IdRef="Sequence_2">
+            <uga:DownloadSpreadsheet ContinueOnError="{x:Null}" SpreadsheetId="{x:Null}" AuthScopesInvalid="False" DisplayName="Download Spreadsheet" DownloadAs="Xlsx" DownloadPath="AutoEmailSpreadsheetDownloaded" GoogleSpreadsheet="[GSpreadsheet]" sap:VirtualizedContainerService.HintSize="721.6,264.8" sap2010:WorkflowViewState.IdRef="DownloadSpreadsheet_1" LocalFilepath="[localFilePath]" />
+            <ueab:ExcelApplicationCard Password="{x:Null}" ReadFormatting="{x:Null}" DisplayName="Use Excel File" sap:VirtualizedContainerService.HintSize="721.6,1416" sap2010:WorkflowViewState.IdRef="ExcelApplicationCard_1" ResizeWindow="None" WorkbookPath="[localFilePath]">
+              <ueab:ExcelApplicationCard.Body>
+                <ActivityAction x:TypeArguments="ue:IWorkbookQuickHandle">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="ue:IWorkbookQuickHandle" Name="Excel" />
+                  </ActivityAction.Argument>
+                  <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="688,1123.2" sap2010:WorkflowViewState.IdRef="Sequence_3">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                    <ueab:ReadCellValueX Cell="[CurrentRow.ByIndex(0)]" DisplayName="Read Cell Value" GetFormattedText="True" sap:VirtualizedContainerService.HintSize="443.2,192" sap2010:WorkflowViewState.IdRef="ReadCellValueX_4">
-                      <ueab:ReadCellValueX.SaveTo>
-                        <OutArgument x:TypeArguments="x:Object">[currentName]</OutArgument>
-                      </ueab:ReadCellValueX.SaveTo>
-                    </ueab:ReadCellValueX>
-                    <ueab:ReadCellValueX Cell="[CurrentRow.ByIndex(1)]" DisplayName="Read Cell Value" GetFormattedText="False" sap:VirtualizedContainerService.HintSize="443.2,192" sap2010:WorkflowViewState.IdRef="ReadCellValueX_2">
-                      <ueab:ReadCellValueX.SaveTo>
-                        <OutArgument x:TypeArguments="x:Object">[currentEmail]</OutArgument>
-                      </ueab:ReadCellValueX.SaveTo>
-                    </ueab:ReadCellValueX>
-                    <ueab:ReadCellValueX Cell="[CurrentRow.ByIndex(2)]" DisplayName="Read Cell Value" GetFormattedText="True" sap:VirtualizedContainerService.HintSize="443.2,192" sap2010:WorkflowViewState.IdRef="ReadCellValueX_3">
-                      <ueab:ReadCellValueX.SaveTo>
-                        <OutArgument x:TypeArguments="x:Object">[currentMessage]</OutArgument>
-                      </ueab:ReadCellValueX.SaveTo>
-                    </ueab:ReadCellValueX>
-                    <uga:SendEmailConnections ArgumentAttachmentPaths="{x:Null}" AttachmentPaths="{x:Null}" Attachments="{x:Null}" Bcc="{x:Null}" Cc="{x:Null}" ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" ReplyTo="{x:Null}" SingleAttachment="{x:Null}" TextBody="{x:Null}" AttachmentInputMode="Builder" AuthScopesInvalid="False" Body="[UiPathObjectExtensions.AsText(currentMessage)]" ConnectionId="bd8d7773-3bed-4797-83d0-b05ef0f92688" DisplayName="Send Email" sap:VirtualizedContainerService.HintSize="443.2,465.6" sap2010:WorkflowViewState.IdRef="SendEmailConnections_2" Importance="Normal" InputType="HTML" SaveAsDraft="False" Subject="Automatic Email Sending via Excel Spreadsheet (Newest)" To="[New List(Of String) From { currentEmail.ToString() }]" UseConnectionService="True">
-                      <uga:SendEmailConnections.ArgumentAttachments>
-                        <scg:List x:TypeArguments="InArgument(upr:IResource)" Capacity="0" />
-                      </uga:SendEmailConnections.ArgumentAttachments>
-                      <uga:SendEmailConnections.AttachmentsBackup>
-                        <usau:BackupSlot x:TypeArguments="ugage:AttachmentInputMode" StoredValue="Builder">
-                          <usau:BackupSlot.BackupValues>
-                            <scg:List x:TypeArguments="x:Object" x:Key="UseExisting" Capacity="1">
-                              <InArgument x:TypeArguments="scg:IEnumerable(upr:IResource)" />
-                            </scg:List>
-                          </usau:BackupSlot.BackupValues>
-                        </usau:BackupSlot>
-                      </uga:SendEmailConnections.AttachmentsBackup>
-                      <uga:SendEmailConnections.InputTypeBackup>
-                        <usau:BackupSlot x:TypeArguments="ugage:BodyInputType" StoredValue="HTML">
-                          <usau:BackupSlot.BackupValues>
-                            <scg:Dictionary x:TypeArguments="ugage:BodyInputType, scg:List(x:Object)" />
-                          </usau:BackupSlot.BackupValues>
-                        </usau:BackupSlot>
-                      </uga:SendEmailConnections.InputTypeBackup>
-                    </uga:SendEmailConnections>
+                    <ueab:ExcelForEachRowX DisplayName="For Each Excel Row" EmptyRowBehavior="Stop" HasHeaders="True" sap:VirtualizedContainerService.HintSize="625.6,1034.4" sap2010:WorkflowViewState.IdRef="ExcelForEachRowX_1" Range="[Excel.Sheet(&quot;Sheet1&quot;)]" SaveAfterEachRow="False">
+                      <ueab:ExcelForEachRowX.Body>
+                        <ActivityAction x:TypeArguments="ue:CurrentRowQuickHandle, x:Int32">
+                          <ActivityAction.Argument1>
+                            <DelegateInArgument x:TypeArguments="ue:CurrentRowQuickHandle" Name="CurrentRow" />
+                          </ActivityAction.Argument1>
+                          <ActivityAction.Argument2>
+                            <DelegateInArgument x:TypeArguments="x:Int32" Name="CurrentIndex" />
+                          </ActivityAction.Argument2>
+                          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="592,818.4" sap2010:WorkflowViewState.IdRef="Sequence_2">
+                            <sap:WorkflowViewStateService.ViewState>
+                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                              </scg:Dictionary>
+                            </sap:WorkflowViewStateService.ViewState>
+                            <umab:ExchangeApplicationCard ConnectionAccountName="{x:Null}" ConnectionId="{x:Null}" SharedMailbox="{x:Null}" Account="lewhong@live.utm.my" DisplayName="Use Outlook 365" EmailAddress="lewhong@live.utm.my" sap:VirtualizedContainerService.HintSize="529.6,729.6" sap2010:WorkflowViewState.IdRef="ExchangeApplicationCard_1" UseConnectionService="False">
+                              <umab:ExchangeApplicationCard.ApplicationId>
+                                <InArgument x:TypeArguments="x:String">
+                                  <Literal x:TypeArguments="x:String" Value="" />
+                                </InArgument>
+                              </umab:ExchangeApplicationCard.ApplicationId>
+                              <umab:ExchangeApplicationCard.Body>
+                                <ActivityAction x:TypeArguments="um:IMailQuickHandle">
+                                  <ActivityAction.Argument>
+                                    <DelegateInArgument x:TypeArguments="um:IMailQuickHandle" Name="lewhonglive" />
+                                  </ActivityAction.Argument>
+                                  <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="496,481.6" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                                    <sap:WorkflowViewStateService.ViewState>
+                                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                      </scg:Dictionary>
+                                    </sap:WorkflowViewStateService.ViewState>
+                                    <umab:SendMailX Bcc="{x:Null}" Body="{x:Null}" Cc="{x:Null}" HtmlBodyFromText="{x:Null}" ReplyTo="{x:Null}" Account="[lewhonglive]" DisplayName="Send Email" sap:VirtualizedContainerService.HintSize="433.6,392.8" sap2010:WorkflowViewState.IdRef="SendMailX_1" Importance="Normal" IsDraft="False" MaxBodyDocumentSizeMB="2" Sensitivity="Normal" Subject="Auto Emallling" To="[CurrentRow.ByField(&quot;Email&quot;)]" UseDocumentAsBody="False">
+                                      <umab:SendMailX.Files>
+                                        <scg:List x:TypeArguments="InArgument(x:String)" Capacity="0" />
+                                      </umab:SendMailX.Files>
+                                      <umab:SendMailX.HtmlBodyFromFile>
+                                        <umabh:HtmlContentArgument HtmlBody="{x:Null}" FilePath=".data/HtmlContent1.html">
+                                          <umabh:HtmlContentArgument.RuntimeImages>
+                                            <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+                                          </umabh:HtmlContentArgument.RuntimeImages>
+                                          <umabh:HtmlContentArgument.ValueMappings>
+                                            <scg:List x:TypeArguments="umabh:HtmlValueMappingBase" Capacity="4">
+                                              <umabh:HtmlTextValueMapping Name="message" Value="[CurrentRow.ByField(&quot;Message&quot;)]" />
+                                              <umabh:HtmlTextValueMapping Name="name" Value="[CurrentRow.ByField(&quot;Name&quot;)]" />
+                                            </scg:List>
+                                          </umabh:HtmlContentArgument.ValueMappings>
+                                        </umabh:HtmlContentArgument>
+                                      </umab:SendMailX.HtmlBodyFromFile>
+                                    </umab:SendMailX>
+                                  </Sequence>
+                                </ActivityAction>
+                              </umab:ExchangeApplicationCard.Body>
+                              <umab:ExchangeApplicationCard.TenantId>
+                                <InArgument x:TypeArguments="x:String">
+                                  <Literal x:TypeArguments="x:String" Value="" />
+                                </InArgument>
+                              </umab:ExchangeApplicationCard.TenantId>
+                            </umab:ExchangeApplicationCard>
+                          </Sequence>
+                        </ActivityAction>
+                      </ueab:ExcelForEachRowX.Body>
+                    </ueab:ExcelForEachRowX>
                   </Sequence>
                 </ActivityAction>
-              </ueab:ExcelForEachRowX.Body>
-            </ueab:ExcelForEachRowX>
+              </ueab:ExcelApplicationCard.Body>
+            </ueab:ExcelApplicationCard>
           </Sequence>
         </ActivityAction>
-      </ueab:ExcelApplicationCard.Body>
-    </ueab:ExcelApplicationCard>
+      </ugas:GoogleSheetsApplicationScope.Body>
+      <ugas:GoogleSheetsApplicationScope.CredentialID>
+        <InArgument x:TypeArguments="x:String">
+          <Literal x:TypeArguments="x:String" Value="" />
+        </InArgument>
+      </ugas:GoogleSheetsApplicationScope.CredentialID>
+      <ugas:GoogleSheetsApplicationScope.CredentialSecret>
+        <InArgument x:TypeArguments="x:String">
+          <Literal x:TypeArguments="x:String" Value="" />
+        </InArgument>
+      </ugas:GoogleSheetsApplicationScope.CredentialSecret>
+    </ugas:GoogleSheetsApplicationScope>
   </ueab:SequenceX>
 </Activity>
